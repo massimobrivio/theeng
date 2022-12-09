@@ -6,6 +6,7 @@ from random import sample
 import numpy as np
 import gmsh
 import meshio
+from sklearn.decomposition import PCA
 
 
 class Mesh:
@@ -96,6 +97,13 @@ if __name__ == "__main__":
         mesh_list.append(mesh)
     
     meshes = Meshes(mesh_list)
-    meshes_coordinates = meshes.return_meshes_coordinates()
-    for mesh_coordinates in meshes_coordinates:
-        print(np.shape(mesh_coordinates))
+    meshes_coordinates = meshes.return_meshes_coordinates() # needs reshaping --> is it possible in this context?
+    new = np.reshape(meshes_coordinates, newshape=(3, 3*675))
+    pca = PCA(n_components=2)
+    pca.fit(new)
+
+    print(pca.explained_variance_ratio_)
+    print(pca.singular_values_)
+    
+    # for mesh_coordinates in meshes_coordinates:
+    #     print(np.shape(mesh_coordinates))
